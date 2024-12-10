@@ -12,10 +12,6 @@ CREATE TABLE tiendas(
     codpostal CHAR(5)
 );
 
-ALTER TABLE tiendas
-    ADD PRIMARY KEY (nif),
-    MODIFY nombre VARCHAR(30) NOT NULL;
-
 CREATE TABLE fabricantes(
     cod_fabricante INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(15) NOT NULL,
@@ -25,15 +21,14 @@ CREATE TABLE fabricantes(
 CREATE TABLE articulos(
     articulo VARCHAR(20),
     cod_fabricante INT UNSIGNED,
-    peso SMALLINT UNSIGNED CHECK (peso>0) ,
+    peso INT UNSIGNED CHECK (peso>0) ,
     categoria ENUM('primera','segunda','tercera'),
-    precio_venta DECIMAL(7,2) NOT NULL CHECK (precio_venta>0),
-    precio_costo DECIMAL(7,2) NOT NULL CHECK (precio_costo>0),
-    existencias INT UNSIGNED,
+    precio_venta DECIMAL(7,2) CHECK (precio_venta>0),
+    precio_costo DECIMAL(7,2) CHECK (precio_costo>0),
+    existencias INT UNSIGNED NOT NULL,
     PRIMARY KEY (articulo, cod_fabricante, peso, categoria)
 );
 
-ALTER TABLE articulos ADD FOREIGN KEY (cod_fabricante) REFERENCES fabricantes(cod_fabricante) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 CREATE TABLE ventas(
     nif VARCHAR(10),
@@ -42,10 +37,39 @@ CREATE TABLE ventas(
     peso INT UNSIGNED,
     categoria ENUM('primera','segunda','tercera'),
     fecha_venta DATE,
-    unidades_vendidas SMALLINT UNSIGNED NOT NULL CHECK(unidades_vendidas > 0),
+    unidades_vendidas SMALLINT UNSIGNED CHECK(unidades_vendidas > 0),
     PRIMARY KEY(nif, articulo, cod_fabricante, peso, categoria, fecha_venta)
 );
 
+CREATE TABLE pedidos(
+    nif VARCHAR(10),
+    articulo VARCHAR(20),
+    cod_fabricante INT UNSIGNED,
+    peso INT UNSIGNED,
+    categoria ENUM('primera','segunda','tercera'),
+    fecha_pedido DATE,
+    unidades_pedidas SMALLINT UNSIGNED CHECK(unidades_pedidas >0),
+    existencias INT UNSIGNED NOT NULL,
+    PRIMARY KEY(nif,articulo,cod_fabricante,peso,categoria,fecha_pedido)
+);
+
+ALTER TABLE tiendas
+    MODIFY nombre VARCHAR(30) NOT NULL,
+    ADD CONSTRAINT PK_tiendas PRIMARY KEY (nif);
+
+ALTER TABLE articulos 
+    ADD CONSTRAINT FK_articulos_fabricante FOREIGN KEY (cod_fabricante) REFERENCES fabricantes(cod_fabricante) ON DELETE RESTRICT ON UPDATE CASCADE;
+
 ALTER TABLE ventas
-    ADD FOREIGN KEY (nif) REFERENCES tiendas(nif) ON DELETE RESTRICT ON UPDATE CASCADE,
-    ADD FOREIGN KEY (articulo, cod_fabricante, peso, categoria) REFERENCES articulos(articulo, cod_fabricante, peso, categoria);
+    ADD CONSTRAINT FK_ventas_tienda FOREIGN KEY (nif) REFERENCES tiendas(nif) ON DELETE RESTRICT ON UPDATE CASCADE,
+    ADD CONSTRAINT FK_venta_articulos FOREIGN KEY (articulo, cod_fabricante, peso, categoria) REFERENCES articulos(articulo, cod_fabricante, peso, categoria);
+
+ALTER TABLE pedidos
+    ADD CONSTRAINT FK_pedidos_tienda FOREIGN KEY (nif) REFERENCES tiendas(nif) ON DELETE RESTRICT ON UPDATE CASCADE,
+    ADD CONSTRAINT FK_pedidos_articulos FOREIGN KEY(articulo, cod_fabricante, peso, categoria) REFERENCES articulos(articulo, cod_fabricante, peso, categoria) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+ALTER TABLE articulos
+    MODIFY precio_venta DECIMAL(10,2) NOT NULL;
+
+ALTER TABLE pedidos
+    ADD COLUMN fecha_entrega DATE;
