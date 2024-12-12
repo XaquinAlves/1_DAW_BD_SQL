@@ -38,3 +38,7 @@ ALTER TABLE piezas
 ALTER TABLE proveedores
     MODIFY nombreprov VARCHAR(20) UNIQUE;
 
+ALTER TABLE suministradores
+    ADD FOREIGN KEY (id_proveedor) REFERENCES proveedores(id_proveedor),
+    ADD FOREIGN KEY (id_pieza) REFERENCES piezas(id_pieza),
+    ADD FOREIGN KEY (id_proyecto) REFERENCES proyectos(id_proyecto);
