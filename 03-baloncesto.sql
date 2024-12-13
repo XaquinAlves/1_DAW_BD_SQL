@@ -35,8 +35,8 @@ CREATE TABLE nacionalidade(
 );
 
 ALTER TABLE xogador
-    ADD CONSTRAINT fk_xogador_equipos FOREIGN KEY (codigo_equipo) REFERENCES equipo(codigo),
-    ADD CONSTRAINT fk_xogador_nacionalidade FOREIGN KEY (nacionalidade) REFERENCES nacionalidade(codigo);
+    ADD CONSTRAINT fk_xogador_equipos FOREIGN KEY (codigo_equipo) REFERENCES equipo(codigo) ON DELETE RESTRICT ON UPDATE CASCADE,
+    ADD CONSTRAINT fk_xogador_nacionalidade FOREIGN KEY (nacionalidade) REFERENCES nacionalidade(codigo) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 ALTER TABLE equipo
     ADD COLUMN nacionalidade CHAR(3) DEFAULT('ESP'),
@@ -55,4 +55,4 @@ CREATE TABLE posiciones(
 ALTER TABLE xogador
     DROP posicion,
     ADD COLUMN idposicion INT UNSIGNED,
-    ADD CONSTRAINT fk_xogador_posicion FOREIGN KEY(idposicion) REFERENCES posiciones(idposicion);
+    ADD CONSTRAINT fk_xogador_posicion FOREIGN KEY(idposicion) REFERENCES posiciones(idposicion) ON DELETE RESTRICT ON UPDATE CASCADE;
