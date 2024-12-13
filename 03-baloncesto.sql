@@ -40,7 +40,8 @@ ALTER TABLE xogador
 
 ALTER TABLE equipo
     ADD COLUMN nacionalidade CHAR(3) DEFAULT('ESP'),
-    ADD CONSTRAINT fk_equipo_nacionalidade FOREIGN KEY(nacionalidade) REFERENCES nacionalidade(codigo);
+    ADD CONSTRAINT fk_equipo_nacionalidade FOREIGN KEY(nacionalidade) REFERENCES nacionalidade(codigo) 
+        ON DELETE RESTRICT ON UPDATE CASCADE;
 
 ALTER TABLE xogador
     ADD COLUMN salario DECIMAL(10,2),
