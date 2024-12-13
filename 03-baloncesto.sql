@@ -54,5 +54,6 @@ CREATE TABLE posiciones(
 
 ALTER TABLE xogador
     DROP posicion,
-    ADD COLUMN idposicion INT UNSIGNED,
-    ADD CONSTRAINT fk_xogador_posicion FOREIGN KEY(idposicion) REFERENCES posiciones(idposicion) ON DELETE RESTRICT ON UPDATE CASCADE;
+    ADD COLUMN idposicion INT UNSIGNED NOT NULL,
+    ADD CONSTRAINT fk_xogador_posicion FOREIGN KEY(idposicion) REFERENCES posiciones(idposicion) 
+        ON DELETE RESTRICT ON UPDATE CASCADE;
