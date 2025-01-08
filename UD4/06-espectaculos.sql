@@ -85,4 +85,9 @@ ALTER TABLE zonas_recintos
 ALTER TABLE asientos
     ADD CONSTRAINT FK_asientos_recinto_zona FOREIGN KEY (cod_recinto,zona) REFERENCES zonas_recintos(PK_zonas_recintos) ON DELETE RESTRICT ON UPDATE CASCADE;
 
+ALTER TABLE representaciones
+    ADD CONSTRAINT FK_representaciones_espectaculo FOREIGN KEY (cod_espectaculo) REFERENCES espectaculo(cod_espectaculo) ON DELETE RESTRICT ON UPDATE CASCADE;
 
+ALTER TABLE entradas
+    ADD CONSTRAINT FK_entradas_representacion FOREIGN KEY (cod_espectaculo, fecha, hora) REFERENCES representaciones(PK_representacion) ON DELETE RESTRICT ON UPDATE CASCADE,
+    ADD CONSTRAINT FK_entradas_asiento FOREIGN KEY (cod_recinto, fila, numero, zona) REFERENCES asientos(PK_asientos) ON DELETE RESTRICT ON UPDATE CASCADE,
