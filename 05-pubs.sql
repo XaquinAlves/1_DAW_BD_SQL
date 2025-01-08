@@ -9,7 +9,7 @@ CREATE TABLE localidad(
 )ENGINE=InnoDB;
 
 CREATE TABLE empleado(
-    dniEmpleado CHAR(9) PRIMARY KEY,
+    dniEmpleado VARCHAR(9) PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
     domicilio VARCHAR(255)
 )ENGINE=InnoDB;
@@ -26,23 +26,23 @@ CREATE TABLE pub(
 
 CREATE TABLE pub_empleado(
     codPub VARCHAR(30),
-    dniEmpleado CHAR(9),
-    funcion ENUM('CAMARERO','SEGURIDAD','LIMPIEZA'),
+    dniEmpleado VARCHAR(9),
+    funcion ENUM('CAMARERO','SEGURIDAD','LIMPIEZA') NOT NULL,
     PRIMARY KEY(codPub,dniEmpleado,funcion)
 )ENGINE=InnoDB;
 
 CREATE TABLE titular(
-    dniTitular CHAR(9) PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
+    dniTitular VARCHAR(9) PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
     domicilio VARCHAR(255),
     codPub VARCHAR(30) NOT NULL
 )ENGINE=InnoDB;
 
 CREATE TABLE existencias(
-    codArticulo CHAR(10) PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
+    codArticulo VARCHAR(30) PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
     cantidad INT UNSIGNED NOT NULL,
-    precio DECIMAL(7,2) UNSIGNED NOT NULL CHECK(precio > 0),
+    precio DECIMAL(8,2) UNSIGNED NOT NULL CHECK(precio > 0),
     codPub VARCHAR(30) NOT NULL
 )ENGINE=InnoDB;
 
