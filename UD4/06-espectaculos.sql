@@ -56,7 +56,7 @@ CREATE TABLE entradas(
     fecha DATE,
     hora TIME,
 
-    cod_recinto INT UNSIGNED,
+    cod_recinto INT UNSIGNED NOT NULL,
     fila INT UNSIGNED,
     numero INT UNSIGNED,
     zona CHAR(10),
