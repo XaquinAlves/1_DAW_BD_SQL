@@ -40,7 +40,7 @@ CREATE TABLE asientos(
     cod_recinto INT UNSIGNED,
     zona CHAR(10),
     fila INT UNSIGNED,
-    numero INT UNSIGNED
+    numero INT UNSIGNED,
     CONSTRAINT PK_asientos PRIMARY KEY(cod_recinto, zona, fila, numero) 
 )ENGINE=InnoDB;
 
@@ -61,15 +61,18 @@ CREATE TABLE entradas(
     numero INT UNSIGNED,
     zona CHAR(10),
 
-    dni_cliente VARCHAR(9)
+    dni_cliente VARCHAR(9),
 
+    CONSTRAINT PK_entradas PRIMARY KEY(cod_espectaculo, fecha, hora, fila, numero, zona, dni_cliente)
 )ENGINE=InnoDB;
 
 CREATE TABLE espectadores(
-    dni_cliente VARCHAR(9),
+    dni_cliente VARCHAR(9) PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
     direccion VARCHAR(255),
-
+    telefono INT UNSIGNED NOT NULL,
+    ciudad VARCHAR(255),
+    ntarjeta INT UNSIGNED NOT NULL
 )ENGINE=InnoDB;
 
 ALTER TABLE espectaculo
@@ -77,17 +80,18 @@ ALTER TABLE espectaculo
 
 ALTER TABLE precios_espectaculos
     ADD CONSTRAINT FK_precios_codEspectaculo FOREIGN KEY (cod_espectaculo) REFERENCES espectaculo(cod_espectaculo) ON DELETE RESTRICT ON UPDATE CASCADE,
-    ADD CONSTRAINT FK_precios_recinto _zona FOREIGN KEY (cod_recinto, zona) REFERENCES zonas_recintos(PK_zonas_recintos) ON DELETE RESTRICT ON UPDATE CASCADE;
+    ADD CONSTRAINT FK_precios_recinto_zona FOREIGN KEY (cod_recinto, zona) REFERENCES zonas_recintos(cod_recinto,zona) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 ALTER TABLE zonas_recintos
     ADD CONSTRAINT FK_zonas_codRecinto FOREIGN KEY (cod_recinto) REFERENCES recintos(cod_recinto) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 ALTER TABLE asientos
-    ADD CONSTRAINT FK_asientos_recinto_zona FOREIGN KEY (cod_recinto,zona) REFERENCES zonas_recintos(PK_zonas_recintos) ON DELETE RESTRICT ON UPDATE CASCADE;
+    ADD CONSTRAINT FK_asientos_recinto_zona FOREIGN KEY (cod_recinto,zona) REFERENCES zonas_recintos(cod_recinto, zona) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 ALTER TABLE representaciones
     ADD CONSTRAINT FK_representaciones_espectaculo FOREIGN KEY (cod_espectaculo) REFERENCES espectaculo(cod_espectaculo) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 ALTER TABLE entradas
-    ADD CONSTRAINT FK_entradas_representacion FOREIGN KEY (cod_espectaculo, fecha, hora) REFERENCES representaciones(PK_representacion) ON DELETE RESTRICT ON UPDATE CASCADE,
-    ADD CONSTRAINT FK_entradas_asiento FOREIGN KEY (cod_recinto, fila, numero, zona) REFERENCES asientos(PK_asientos) ON DELETE RESTRICT ON UPDATE CASCADE,
+    ADD CONSTRAINT FK_entradas_espectaculo FOREIGN KEY (cod_espectaculo) REFERENCES espectaculo(cod_espectaculo) ON DELETE RESTRICT ON UPDATE CASCADE,
+    ADD CONSTRAINT FK_entradas_asiento  FOREIGN KEY (cod_recinto,zona, fila, numero) REFERENCES asientos(cod_recinto, zona, fila, numero) ON DELETE RESTRICT ON UPDATE CASCADE,
+    ADD CONSTRAINT FK_entradas_espectador FOREIGN KEY (dni_cliente) REFERENCES espectadores(dni_cliente) ON DELETE RESTRICT ON UPDATE CASCADE;
