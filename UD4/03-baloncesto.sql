@@ -28,8 +28,7 @@ CREATE TABLE xogador(
     ficha ENUM('','EUR','JFL','EXT') NOT NULL,
     estatura DECIMAL(3,2),
     data_nacemento DATE,
-    temporadas INT,
-    salario DECIMAL(11,2) NOT NULL CHECK(salario < 100000000)
+    temporadas INT
    -- CONSTRAINT min_numero 
    --     CHECK(numero > 0), 
    -- CONSTRAINT max_numero 
@@ -51,9 +50,21 @@ CREATE TABLE posiciones(
 );
 
 ALTER TABLE xogador
-    ADD COLUMN salario DECIMAL(10,2),
     ALTER ficha SET DEFAULT('EUR'),
     DROP posicion,
     ADD COLUMN idposicion INT UNSIGNED NOT NULL,
     ADD CONSTRAINT fk_xogador_posicion FOREIGN KEY(idposicion) REFERENCES posiciones(idposicion) 
         ON DELETE RESTRICT ON UPDATE CASCADE;
+
+ALTER TABLE xogador
+    ADD COLUMN salario DECIMAL(11,2) NOT NULL CHECK(salario < 100000000);
+
+CREATE TABLE club(
+    cod_club CHAR(3) PRIMARY KEY,
+    nombre_club VARCHAR(100)
+);
+
+ALTER TABLE equipo
+    DROP nome_club,
+    ADD COLUMN cod_club CHAR(3) NOT NULL AFTER codigo,
+    ADD FOREIGN KEY (cod_club) REFERENCES club(cod_club) ON DELETE RESTRICT ON UPDATE CASCADE;
