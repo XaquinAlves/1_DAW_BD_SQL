@@ -9,13 +9,14 @@ CREATE TABLE tiendas(
     direccion VARCHAR(20),
     poblacion VARCHAR(20),
     provincia VARCHAR(20),
-    codpostal CHAR(5)
+    codpostal CHAR(5),
+    tipo_tienda ENUM('Principal','Secundaria','Digital') NOT NULL DEFAULT 'Principal'
 );
 
 CREATE TABLE fabricantes(
     cod_fabricante INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(15) NOT NULL,
-    pais VARCHAR(15) NOT NULL
+    continente ENUM('EU','AM','AF','OC','AS') DEFAULT 'EU'
 );
 
 CREATE TABLE articulos(
@@ -23,8 +24,8 @@ CREATE TABLE articulos(
     cod_fabricante INT UNSIGNED,
     peso INT UNSIGNED CHECK (peso>0) ,
     categoria ENUM('primera','segunda','tercera'),
-    precio_venta DECIMAL(7,2) CHECK (precio_venta>0),
-    precio_costo DECIMAL(7,2) CHECK (precio_costo>0),
+    precio_venta DECIMAL(8,2) CHECK (precio_venta>0),
+    precio_costo DECIMAL(8,2) CHECK (precio_costo>0),
     existencias INT UNSIGNED NOT NULL,
     PRIMARY KEY (articulo, cod_fabricante, peso, categoria)
 );
@@ -36,8 +37,9 @@ CREATE TABLE ventas(
     cod_fabricante INT UNSIGNED,
     peso INT UNSIGNED,
     categoria ENUM('primera','segunda','tercera'),
-    fecha_venta DATE,
+    fecha_venta DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     unidades_vendidas SMALLINT UNSIGNED CHECK(unidades_vendidas > 0),
+    tipo_venta ENUM('Mostrador','Bajo Pedido','web') NOT NULL,
     PRIMARY KEY(nif, articulo, cod_fabricante, peso, categoria, fecha_venta)
 );
 
@@ -47,7 +49,7 @@ CREATE TABLE pedidos(
     cod_fabricante INT UNSIGNED,
     peso INT UNSIGNED,
     categoria ENUM('primera','segunda','tercera'),
-    fecha_pedido DATE,
+    fecha_pedido DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     unidades_pedidas SMALLINT UNSIGNED CHECK(unidades_pedidas >0),
     existencias INT UNSIGNED NOT NULL,
     PRIMARY KEY(nif,articulo,cod_fabricante,peso,categoria,fecha_pedido)
