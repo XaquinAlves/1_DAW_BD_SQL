@@ -25,7 +25,7 @@ CREATE TABLE recintos(
     nombre VARCHAR(255) NOT NULL,
     direccion VARCHAR(255) NOT NULL,
     ciudad VARCHAR(255) NOT NULL,
-    telefono INT UNSIGNED NOT NULL,
+    telefono VARCHAR(15) NOT NULL,
     horario VARCHAR(255) NOT NULL
 )ENGINE=InnoDB;
 
