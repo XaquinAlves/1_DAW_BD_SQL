@@ -28,7 +28,8 @@ CREATE TABLE xogador(
     ficha ENUM('','EUR','JFL','EXT') NOT NULL,
     estatura DECIMAL(3,2),
     data_nacemento DATE,
-    temporadas INT
+    temporadas INT,
+    salario DECIMAL(11,2) NOT NULL CHECK(salario < 100000000)
    -- CONSTRAINT min_numero 
    --     CHECK(numero > 0), 
    -- CONSTRAINT max_numero 

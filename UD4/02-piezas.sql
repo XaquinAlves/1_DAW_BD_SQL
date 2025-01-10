@@ -19,17 +19,12 @@ CREATE TABLE piezas(
 
 CREATE TABLE proveedores(
     id_proveedor INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    id_provincia INT UNSIGNED NOT NULL
+    nombreprov VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE proyectos(
     id_proyecto INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nombeproyecto VARCHAR(50) NOT NULL
-);
-
-CREATE TABLE provincias(
-    id_provincia INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    nombre_provincia VARCHAR(50) UNIQUE NOT NULL
 );
 
 ALTER TABLE proyectos
@@ -41,9 +36,19 @@ ALTER TABLE piezas
     CHANGE nombrepiez nombre_pieza VARCHAR(20) UNIQUE;
 
 ALTER TABLE proveedores
-    ADD FOREIGN KEY (id_provincia) REFERENCES provincias(id_provincia) ON DELETE RESTRICT ON UPDATE CASCADE;
+    MODIFY nombreprov VARCHAR(20) UNIQUE;
 
 ALTER TABLE suministradores
     ADD FOREIGN KEY (id_proveedor) REFERENCES proveedores(id_proveedor) ON DELETE RESTRICT ON UPDATE CASCADE,
     ADD FOREIGN KEY (id_pieza) REFERENCES piezas(id_pieza) ON DELETE RESTRICT ON UPDATE CASCADE,
     ADD FOREIGN KEY (id_proyecto) REFERENCES proyectos(id_proyecto) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+CREATE TABLE provincias(
+    id_provincia INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    nombre_provincia VARCHAR(50) UNIQUE NOT NULL
+);
+
+ALTER TABLE proveedores
+    DROP nombreprov,
+    ADD COLUMN  id_provincia INT UNSIGNED NOT NULL,
+    ADD FOREIGN KEY (id_provincia) REFERENCES provincias(id_provincia) ON DELETE RESTRICT ON UPDATE CASCADE;
