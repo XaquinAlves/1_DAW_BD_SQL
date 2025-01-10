@@ -39,3 +39,24 @@ ALTER TABLE departamento
 
 ALTER TABLE empregado
     ADD CONSTRAINT empregado_FK FOREIGN KEY(empDepartamento) REFERENCES departamento(depNumero) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+ALTER TABLE centro
+    CHANGE cenEnderezo cenRuaNum VARCHAR(255),
+    ADD COLUMN cod_localidade INT UNSIGNED;
+
+CREATE TABLE localidad(
+    cod_localidad INT UNSIGNED PRIMARY KEY,
+    nome VARCHAR(100),
+    cod_provincia INT UNSIGNED NOT NULL
+);
+
+CREATE TABLE provincia(
+    cod_provincia INT UNSIGNED PRIMARY KEY,
+    nome VARCHAR(100)
+);
+
+ALTER TABLE centro
+    ADD FOREIGN KEY (cod_localidade) REFERENCES localidad(cod_localidad) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+ALTER TABLE localidad
+    ADD FOREIGN KEY (cod_provincia) REFERENCES provincia(cod_provincia) ON DELETE RESTRICT ON UPDATE CASCADE;
