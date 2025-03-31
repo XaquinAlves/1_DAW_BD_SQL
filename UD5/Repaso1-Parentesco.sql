@@ -86,6 +86,28 @@ HAVING COUNT(hijoa.id_persona) > (SELECT AVG(num_fillos)
  *  media de hijos que tienen las personas de la base de datos. Es decir, queremos la 
  *  media de hijos que tienen las personas que tienen más hijos que la media general.
  */
+SELECT (SELECT AVG(num_hijos) 
+		FROM(
+			SELECT COUNT(hijoa.id_persona) AS num_hijos
+			FROM persona mapadre3 
+			LEFT JOIN persona hijoa ON hijoa.madre = mapadre.id_persona 
+									OR hijoa.padre  = mapadre.id_persona 
+			WHERE mapadre3.id_persona = mapadre.id_persona
+		)AS tabla) AS media_fillos
+FROM persona mapadre
+LEFT JOIN persona hijoa ON hijoa.madre = mapadre.id_persona 
+							OR hijoa.padre  = mapadre.id_persona
+GROUP BY mapadre.id_persona
+HAVING COUNT(hijoa.id_persona) > (SELECT AVG(num_fillos)
+									FROM(
+											SELECT COUNT(hijoa2.id_persona) AS num_fillos
+											FROM persona mapadre2
+											LEFT JOIN persona hijoa2 ON hijoa2.madre = mapadre2.id_persona 
+																	OR hijoa2.padre  = mapadre2.id_persona
+											GROUP BY mapadre2.id_persona
+									) AS resumen
+								)
+
 /*
  * 9. Muestra apellidos, nombres y número de nietos de las 2 personas con más nietos de la base de datos. En caso de empate aparecerá la persona con apellidos, nombre ASC.
  */
