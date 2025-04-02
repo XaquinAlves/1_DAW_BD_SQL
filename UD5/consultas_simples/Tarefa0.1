@@ -1,0 +1,53 @@
+1)Mostrar el valor medio de los valores 5,7,2, 9, 3. Llamar a la columna resultado valor medio
+SELECT (5+7+2+9+3)/5 AS valor_medio;
+
+2)Mostrar el contenido de la variable de usuario @mi_variable.
+SET @min_variable = 'Helou'
+SELECT @mi_variable;
+
+3)Mostrar el resto de dividir un valor entre 7 en una columna llamada resto. El valor se recibe en la variable de usuario @valor.
+SET @valor = 34;
+SELECT (@valor % 7) AS resto;
+
+4)Dado un salario y una variable cotización (porcentual entre 0-100), calcula el salario neto. Los valores se reciben en las variables @salario_bruto y @cotizacion.
+SET @salario_bruto =3000;
+SET @cotizacion = 20;
+SELECT (@salario_bruto - (@salario_bruto * (@cotizacion / 100))) AS salario_neto;  -------> mas optimos @salario_bruto * (1 - @cotizacion/100)
+
+---------------------------------------------------------------------------------------------
+
+5)Mostrar toda la información de la tabla track.
+SELECT  * FROM Track t;
+
+6)Mostrar toda la información de la tabla artist.
+SELECT * FROM artist;
+
+7)Mostrar toda la información de la tabla Genre.
+SELECT * FROM genre;
+
+8)Mostrar toda la información de la tabla invoice_line añadiendo una columna coste_total que muestre el producto de multiplicar la cantidad vendida por el precio unitario
+SELECT *, (il.UnitPrice * il.Quantity) AS coste_total FROM InvoiceLine il;
+
+9)Mostrar la tabla track añadiendo dos columnas: peso_MB, duracion_minutos.
+SELECT *, t.Bytes / 1048576 AS peso_MB, t.Milliseconds / 60000 AS duracion_minutos FROM Track t; 
+
+10)Modificar la consulta anterior para añadir duracion_segundos. En una canción que dure 3 minutos y medio el campo duracion_minutos mostrará 3 y la columna duracion_segundos mostrará 30. 
+SELECT *, t.Bytes / 1048576.0 AS peso_MB, t.Milliseconds / 60000 AS duracion_minutos, (t.Milliseconds / 1000) % 60 AS duracion_segundos FROM Track t; 
+
+11)Muestra CustomerId, FirstName, LastName, Company y COuntry de la tabla Customer.
+SELECT CustomerID, FirstName, LastName, Company, Country FROM Customer c; 
+
+12)Muestra un resultado con los diferentes paises en los que viven los clientes (Customer). Sin repeticiones.
+SELECT DISTINCT Country FROM Customer;
+
+13)Muestra un listado con los diferentes compositores de las pistas (Track)
+SELECT DISTINCT Composer FROM Track; 
+
+14)Muestra los diferentes precios que pueden tener las pistas (Track).
+SELECT DISTINCT UnitPrice FROM Track;
+
+15)Muestra BillingCity, BillingCountry y total de los diferentes pedidos (Invoice). Añade una columna precio_euros sabiendo que 1$  = 0,9€. 
+SELECT BillingCity, BillingCountry, Total, (total * 0.9) AS precio_euros FROM Invoice; 
+
+16)Muestra las diferentes ciudades en las que hemos recibido al menos un pedido (Invoice). 
+SELECT DISTINCT BillingCity FROM Invoice; 
