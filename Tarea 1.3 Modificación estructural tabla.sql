@@ -35,7 +35,8 @@ SELECT u.username , u.rol , u.id_rol , ar.*
 FROM usuario u 
 JOIN aux_rol ar ON ar.id_rol = u.id_rol;
 
-ALTER TABLE usuario 
-	DROP COLUMN rol,
-	ADD CONSTRAINT FK_usuario_rol FOREIGN KEY (id_rol) REFERENCES aux_rol(id_rol); 
+ALTER TABLE usuario DROP COLUMN rol,
+	ADD CONSTRAINT FK_usuario_rol FOREIGN KEY (id_rol) REFERENCES aux_rol(id_rol) ON DELETE RESTRICT ON UPDATE CASCADE; 
+
+	
 
