@@ -1,0 +1,5 @@
+1.Si iniciamos una transacción y de repente terminamos la sesión, ¿qué operación hace el servidor: un COMMIT, un ROLLBACK o no se puede saber?
+Se pierde la transacción, que está en memoria secundaria, por lo que no se escriben los cambios en memoria principal
+
+2.¿Qué diferencia existe entre START TRANSACTION y BEGIN?
+BEGIN debería usarse para estructurar código, es un alias de MySQL, y START TRANSACTION es el estándart SQL para iniciar una transaccion
