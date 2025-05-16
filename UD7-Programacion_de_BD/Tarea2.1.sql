@@ -84,14 +84,69 @@ $$
 INSERT INTO vendas (ven_tenda, ven_empregado, ven_cliente, ven_data) VALUES (1,1,1,CURRENT_DATE());
 UPDATE vendas SET ven_cliente = 2 WHERE ven_id = 171;
 
+-- SOLUCIÓN ULTRA PRO MAX 420
+CREATE PROCEDURE refresh_clientes_vendas(IN iid_cliente SMALLINT UNSIGNED)
+BEGIN
+	UPDATE clientes 
+	SET 
+	clt_vendas = (SELECT COUNT(*) FROM vendas WHERE ven_cliente = iid_cliente),
+	clt_ultima_venda = (SELECT MAX(ven_data) FROM vendas WHERE ven_cliente = iid_cliente)
+	WHERE clt_id = iid_cliente;		
+END
+$$
+
+CREATE TRIGGER vendas_AI AFTER INSERT ON vendas
+FOR EACH ROW
+BEGIN
+	CALL refresh_clientes_vendas(NEW.ven_cliente);
+END
+$$
+
+CREATE TRIGGER vendas_AD AFTER DELETE ON vendas
+FOR EACH ROW
+BEGIN
+	CALL refresh_clientes_vendas(OLD.ven_cliente);
+END
+$$
+
+CREATE TRIGGER vendas_AU AFTER UPDATE ON vendas
+FOR EACH ROW
+BEGIN
+	IF NEW.ven_cliente != OLD.ven_cliente THEN
+		CALL refresh_clientes_vendas(OLD.ven_cliente);
+		CALL refresh_clientes_vendas(NEW.ven_cliente);
+	ELSEIF OLD.ven_data != NEW.ven_data THEn
+		CALL refresh_clientes_vendas(NEW.ven_cliente);
+	END IF;
+END
+$$
+
+
 -- q4. Crear y probar los disparadores necesarios para llevar 
 -- el registro de todas las operaciones que modifiquen (insert, 
 -- update y delete) los datos almacenados en las tablas que hay en su 
 -- esquema (centro, departamento, empleado). Para eso se debe crear 
 -- una tabla en la base de datos trabajadores para el registro de todas 
 -- esas operaciones. El código para crear la tabla de registro es:
+CREATE TABLE IF NOT EXISTS bd_traballadores.rexistroOperacions
+(
+	idOperacion integer UNSIGNED NOT NULL AUTO_INCREMENT, 
+	usuario char(100),
+	# usuario que fai oa modificación
+	dataHora datetime,
+	# data e hora na que se fai a modificación
+	taboa char(50),
+	# táboa na que se fai a modificación
+	operacion char(6),
+	# operación de modificación: INSERT, UPDATE, DELETE
+	PRIMARY KEY (idOperacion)
+)ENGINE = MYISAM;
 
-
+CREATE TRIGGER centro_AI AFTER INSERT ON centro
+FOR EACH ROW
+BEGIN
+	INSERT INTO rexistroOperaci
+END
 
 
 
