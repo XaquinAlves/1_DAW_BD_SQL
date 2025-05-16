@@ -3,6 +3,7 @@
 -- la tabla empleado. Si el dni es incorrecto porque la letra no es la
 -- que corresponde a los dígitos del dni, hay que abortar la inserción y
 -- mostrar el mensaje 'DNI no válido'.
+
 DELIMITER $$
 
 CREATE FUNCTION letraDni(num_dni INT UNSIGNED) 
@@ -44,4 +45,55 @@ SHOW CREATE TRIGGER empregado_BI;
 -- se le hicieron al cliente, y la columna clt_ultima_venta guardia 
 -- información de la fecha en la que se le hizo la última venta.
 
--- q4. Crear y probar los disparadores necesarios para llevar el registro de todas las operaciones que modifiquen (insert, update y delete) los datos almacenados en las tablas que hay en su esquema (centro, departamento, empleado). Para eso se debe crear una tabla en la base de datos trabajadores para el registro de todas esas operaciones. El código para crear la tabla de registro es:
+CREATE TRIGGER vendas_AI AFTER INSERT ON vendas
+FOR EACH ROW
+BEGIN
+	UPDATE clientes AS c
+	SET c.clt_vendas = c.clt_vendas + 1,
+	c.clt_ultima_venda = NEW.ven_data
+	WHERE clt_id = NEW.ven_cliente;		
+END
+$$
+
+CREATE TRIGGER vendas_AD AFTER DELETE ON vendas
+FOR EACH ROW
+BEGIN
+	UPDATE clientes AS c
+	SET
+	c.clt_vendas = c.clt_vendas - 1,
+	c.clt_ultima_venda = NULL
+	WHERE clt_id = OLD.ven_cliente;	
+END
+$$
+
+CREATE TRIGGER vendas_AU AFTER UPDATE ON vendas
+FOR EACH ROW
+BEGIN
+	UPDATE clientes AS cli_old
+	SET cli_old.clt_vendas = cli_old.clt_vendas - 1,
+	cli_old.clt_ultima_venda = NULL
+	WHERE cli_old.clt_id = OLD.ven_cliente;
+
+	UPDATE clientes AS cli_new
+	SET cli_new.clt_vendas = cli_new.clt_vendas + 1,
+	cli_new.clt_ultima_venda = NEW.ven_data
+	WHERE clt_id = NEW.ven_cliente;		
+END
+$$
+
+INSERT INTO vendas (ven_tenda, ven_empregado, ven_cliente, ven_data) VALUES (1,1,1,CURRENT_DATE());
+UPDATE vendas SET ven_cliente = 2 WHERE ven_id = 171;
+
+-- q4. Crear y probar los disparadores necesarios para llevar 
+-- el registro de todas las operaciones que modifiquen (insert, 
+-- update y delete) los datos almacenados en las tablas que hay en su 
+-- esquema (centro, departamento, empleado). Para eso se debe crear 
+-- una tabla en la base de datos trabajadores para el registro de todas 
+-- esas operaciones. El código para crear la tabla de registro es:
+
+
+
+
+
+
+
